@@ -8,9 +8,10 @@ from functools import partial
 # Constants
 MIN_RANDOM_VALUE = 0  # Min random value for the W and H matrices
 MAX_RANDOM_VALUE = 1  # Max random value for the W and H matrices
-CALCULATE_LOSS = False  # True iff we want to calculate loss per iteration
+CALCULATE_LOSS = True  # True iff we want to calculate loss per iteration
 CHECKPOINT_ITERATION = 81  # Iteration number to evaluate RDD to avoid overflow
-
+MIN_EPS = 0.01  # Minimum value of eps to make sure the SGD does progress
+USE_MIN_EPS = True  # True iff we should enforce the MIN_EPS constraint
 
 def to_triplet(graph_input):
     """
@@ -160,9 +161,11 @@ def perform_sgd(iterator, n_i_obj, n_j_obj, beta_val_obj, lambda_val_obj, num_fa
         sgd_h_mat[col][row] = val
 
     updates_done = 0
-    t_0 = 100
+    t_0 = 1000
     for row, col, rating in v_iterator:
         eps = (t_0 + (updates_done+previous_updates)) ** (-beta_val)
+        if USE_MIN_EPS:
+            eps = max(MIN_EPS, eps)
         updates_done += 1
         w_row = sgd_w_mat[row]
         h_col = sgd_h_mat[col]
@@ -319,7 +322,7 @@ def run(num_factors, num_workers, num_iterations, beta_val, lambda_val, v_path, 
         num_updates_done += num_updates
 
         if CALCULATE_LOSS:
-            #Go over the stratums again to calculate the loss
+            # Go over the stratums again to calculate the loss
             loss = 0.0
             for stratum in range(num_workers):
                 w_by_key = w.keyBy(lambda x: (x[0]) % num_workers)
