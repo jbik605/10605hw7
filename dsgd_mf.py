@@ -5,11 +5,11 @@ import pyspark
 import random
 from functools import partial
 
-MIN_RANDOM_VALUE = 0
-MAX_RANDOM_VALUE = 1
-CALCULATE_LOSS = False
-CHECKPOINT_ITERATION = 81
-MIN_EPS = 0.025
+# Constants
+MIN_RANDOM_VALUE = 0  # Min random value for the W and H matrices
+MAX_RANDOM_VALUE = 1  # Max random value for the W and H matrices
+CALCULATE_LOSS = False  # True iff we want to calculate loss per iteration
+CHECKPOINT_ITERATION = 81  # Iteration number to evaluate RDD to avoid overflow
 
 
 def to_triplet(graph_input):
