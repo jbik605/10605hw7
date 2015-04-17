@@ -8,7 +8,7 @@ from functools import partial
 # Constants
 MIN_RANDOM_VALUE = 0  # Min random value for the W and H matrices
 MAX_RANDOM_VALUE = 1  # Max random value for the W and H matrices
-CALCULATE_LOSS = True  # True iff we want to calculate loss per iteration
+CALCULATE_LOSS = False  # True iff we want to calculate loss per iteration
 CHECKPOINT_ITERATION = 81  # Iteration number to evaluate RDD to avoid overflow
 MIN_EPS = 0.01  # Minimum value of eps to make sure the SGD does progress
 USE_MIN_EPS = True  # True iff we should enforce the MIN_EPS constraint
